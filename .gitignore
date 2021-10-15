@@ -1,0 +1,5 @@
+.venv/
+etc/
+pymakr.conf
+src/secrets.py
+src/webrepl_cfg.py
