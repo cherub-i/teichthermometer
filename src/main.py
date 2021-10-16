@@ -4,18 +4,30 @@ import network
 import onewire
 import ubinascii
 import time
+import sys
+
+import logging
+from umqtt.simple import MQTTClient
 
 import secrets
-from mqtt.umqttsimple import MQTTClient
-
 
 # Config
-topic_pub_temp = secrets.MQTT_TOPIC_BASE
+topic_pub_temp = b"wohnung/sensor_tmp_wp_1"
 
-throttle = 5
-min_message_interval = 30  # seconds
-max_message_interval = 5 * 60  # seconds
+throttle = 30
+# seconds between sensor reads
+
+min_message_interval = 60
+# seconds, minimum time between transmission of new readings
+
+max_message_interval = 30 * 60
+# seconds, maximum time between transmission of new readings (reading
+# will be sent, even if it is the same as the previous reading that was
+# sent)
+
 relevant_change_increment = 0.1
+# difference between a reading and the previously sent reading, above
+# which a reading is considered to be "different" and worth sending out
 
 
 def connect_wifi(wifi_ssid, wifi_password):
@@ -24,7 +36,7 @@ def connect_wifi(wifi_ssid, wifi_password):
     station.connect(wifi_ssid, wifi_password)
     while station.isconnected() == False:
         pass
-    print(
+    log.info(
         "Network connection successful, client IP: %s" % station.ifconfig()[0]
     )
 
@@ -35,7 +47,7 @@ def connect_mqtt(client_id, mqtt_server, mqtt_port, mqtt_user, mqtt_password):
             client_id, mqtt_server, mqtt_port, mqtt_user, mqtt_password
         )
         mqtt_client.connect()
-        print("MQTT connection successful")
+        log.info("MQTT connection successful")
         return mqtt_client
     except OSError as e:
         restart("ERROR: Failed to connect to MQTT broker")
@@ -70,7 +82,7 @@ def sensor_id_from_bytearray(bytearray):
 
 
 def restart(message):
-    print(message)
+    log.error(message)
     time.sleep(5)
     machine.reset()
 
@@ -91,15 +103,16 @@ def start():
 
     ds_pin = machine.Pin(4)
     ds_sensor = ds18x20.DS18X20(onewire.OneWire(ds_pin))
-    print("Sensors initialized")
+    log.info("Sensors initialized")
 
     last_message_sent = dict()
     last_results = dict()
+
     while True:
         try:
             time.sleep(throttle)
             results = read_dssensor(ds_sensor)
-            # print("Temperature(s): %s" % results)
+            log.debug("Temperature(s): %s" % results)
             for sensor, measurement in results.items():
                 time_since_last_message = time.time() - last_message_sent.get(
                     sensor, 0
@@ -110,7 +123,7 @@ def start():
                         > relevant_change_increment
                         or time_since_last_message > max_message_interval
                     ):
-                        print(
+                        log.info(
                             "Sending temperature for %s: %.2f"
                             % (sensor, measurement)
                         )
@@ -123,5 +136,14 @@ def start():
         except OSError as e:
             restart("ERROR: Problem in sensor reading loop")
 
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    filename="tt.log",
+    stream=sys.stdout,
+    format="%(asctime)s %(levelname)s %(message)s",
+)
+log = logging.getLogger()
+log.info("STARTUP")
 
 start()
