@@ -7,8 +7,9 @@ share their knowledge and allow reusing it.
 Thank you! Not just to the people whose creations enabled this project,
 but to everyone who shares with the community ♥🙏.
 
-- hardware setup and basic logic:
-  https://randomnerdtutorials.com/micropython-mqtt-publish-ds18b10-esp32-esp8266/
+- hardware setup and basic logic
+  - https://florianmai.de/2016/11/13/esp8266-nodemcu-lua-tutorial-temperatursensor-ds18b20-abfragen/
+  - https://randomnerdtutorials.com/micropython-mqtt-publish-ds18b10-esp32-esp8266/
 - ~~https://github.com/rdehuyss/micropython-ota-updater~~ as of writing
   this, there is a problem with MicroPyhton on ESP8266 with SSL
   certificates, so this OTA library cannot be used
