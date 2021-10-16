@@ -1,5 +1,6 @@
 .venv/
 etc/
+*.log
 pymakr.conf
 src/secrets.py
 src/webrepl_cfg.py

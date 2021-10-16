@@ -12,20 +12,22 @@ from umqtt.simple import MQTTClient
 import secrets
 
 # Config
-topic_pub_temp = b"wohnung/sensor_tmp_wp_1"
+config = dict()
+config["ds_pin"] = 4
+config["mqtt_topic_base"] = b"wohnung/sensor_tmp_wp_1"
 
-throttle = 30
+config["throttle"] = 30
 # seconds between sensor reads
 
-min_message_interval = 60
+config["min_message_interval"] = 60
 # seconds, minimum time between transmission of new readings
 
-max_message_interval = 30 * 60
+config["max_message_interval"] = 30 * 60
 # seconds, maximum time between transmission of new readings (reading
 # will be sent, even if it is the same as the previous reading that was
 # sent)
 
-relevant_change_increment = 0.1
+config["relevant_change_increment"] = 0.1
 # difference between a reading and the previously sent reading, above
 # which a reading is considered to be "different" and worth sending out
 
@@ -88,7 +90,7 @@ def restart(message):
 
 
 def start():
-    global topic_pub_temp, min_message_interval, max_message_interval, relevant_change_increment, throttle
+    global config
 
     client_id = ubinascii.hexlify(machine.unique_id())
 
@@ -101,7 +103,7 @@ def start():
         secrets.MQTT_PASSWORD,
     )
 
-    ds_pin = machine.Pin(4)
+    ds_pin = machine.Pin(config["ds_pin"])
     ds_sensor = ds18x20.DS18X20(onewire.OneWire(ds_pin))
     log.info("Sensors initialized")
 
@@ -110,29 +112,33 @@ def start():
 
     while True:
         try:
-            time.sleep(throttle)
             results = read_dssensor(ds_sensor)
             log.debug("Temperature(s): %s" % results)
             for sensor, measurement in results.items():
                 time_since_last_message = time.time() - last_message_sent.get(
                     sensor, 0
                 )
-                if time_since_last_message > min_message_interval:
+                if time_since_last_message > config["min_message_interval"]:
                     if (
                         abs(measurement - last_results.get(sensor, -100))
-                        > relevant_change_increment
-                        or time_since_last_message > max_message_interval
+                        > config["relevant_change_increment"]
+                        or time_since_last_message
+                        > config["max_message_interval"]
                     ):
                         log.info(
                             "Sending temperature for %s: %.2f"
                             % (sensor, measurement)
                         )
                         mqtt_client.publish(
-                            topic_pub_temp + b"/" + sensor + b"/temperatur",
+                            config["mqtt_topic_base"]
+                            + b"/"
+                            + sensor
+                            + b"/temperatur",
                             b"{0:3.1f}".format(measurement),
                         )
                         last_message_sent[sensor] = time.time()
                         last_results[sensor] = measurement
+            time.sleep(config["throttle"])
         except OSError as e:
             restart("ERROR: Problem in sensor reading loop")
 
@@ -145,5 +151,6 @@ logging.basicConfig(
 )
 log = logging.getLogger()
 log.info("STARTUP")
+log.info("config: " + str(config))
 
 start()
