@@ -1,5 +1,6 @@
 # Teichsensor
-A ESP8266 based temperature sensor, using two DS18X20 sensors.
+A ESP8266 based temperature sensor, using two DS18X20 sensors and
+sending sensor readings as MQTT messages.
 
 ## Learnings
 - writing a log-file is probably a bad idea, as the EEPROM has only a
@@ -11,7 +12,7 @@ A ESP8266 based temperature sensor, using two DS18X20 sensors.
 - not using deep sleep will prevent me from ever running the device on
   battery without having to change the battery ever so often (or even
   better solar energy)
-  
+
 ## Resources
 This project is based on the work of others, who were so generous as to
 share their knowledge and allow reusing it.  
