@@ -11,7 +11,8 @@ A ESP8266 based temperature sensor, using two DS18X20 sensors.
 - not using deep sleep will prevent me from ever running the device on
   battery without having to change the battery ever so often (or even
   better solar energy)
-  ## Resources
+  
+## Resources
 This project is based on the work of others, who were so generous as to
 share their knowledge and allow reusing it.  
 Thank you! Not just to the people whose creations enabled this project,
