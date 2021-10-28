@@ -26,6 +26,7 @@ but to everyone who shares with the community ♥🙏.
     https://randomnerdtutorials.com/micropython-mqtt-publish-ds18b10-esp32-esp8266/
   - Power usage and deep sleep:
     https://www.youtube.com/watch?v=6SdyImetbp8&t=7s
+    - HT7333 Specs: https://www.angeladvance.com/HT73xx.pdf
   - finding the right pins for deep sleep on WEMOS D1 Mini:
     https://www.mischianti.org/2019/11/21/wemos-d1-mini-esp8266-the-three-type-of-sleep-mode-to-manage-energy-savings-part-4/
   - EEPROM lifetime: https://youtu.be/r-hEOL007nw?t=50
@@ -34,6 +35,7 @@ but to everyone who shares with the community ♥🙏.
   certificates, so this OTA library cannot be used
 - logging: https://github.com/pfalcon/pycopy-lib/tree/master/logging
 - MQTT: https://github.com/pfalcon/pycopy-lib/tree/master/umqtt.simple
+- TODO Energy Saving: https://arduinodiy.wordpress.com/2020/01/18/very-deepsleep-and-energy-saving-on-esp8266/
 
 Basic stuff
 
