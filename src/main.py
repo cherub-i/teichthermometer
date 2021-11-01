@@ -6,8 +6,10 @@ import ubinascii
 import time
 import sys
 
+import led
 import logging
 from umqtt.simple import MQTTClient
+from helpers.watchdog import Watchdog
 
 import secrets
 import config
@@ -94,7 +96,13 @@ def start():
     log.info("Sensors initialized")
     watchdog.feed()
 
-    while True:
+    # led.blink()
+    log.debug("DOING MY JOB NOW")
+    log.debug("going to deep sleep")
+    # rtc.alarm(rtc.ALARM0, 15 * 1000)
+    # machine.deepsleep()
+
+    while False:
         try:
             results = read_dssensor(ds_sensor)
             log.debug("Temperature(s): %s" % results)
@@ -114,8 +122,7 @@ def start():
         except OSError as e:
             restart("ERROR: Problem in sensor reading loop")
 
-
-watchdog = machine.WDT()  # enable it with a timeout of 2s
+watchdog = Watchdog(config.WATCHDOG_ENABLED)
 
 logging.basicConfig(
     level=logging.DEBUG,
