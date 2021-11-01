@@ -8,6 +8,7 @@ import sys
 
 import logging
 from umqtt.simple import MQTTClient
+from helpers.watchdog import Watchdog
 
 import secrets
 import config
@@ -114,8 +115,7 @@ def start():
         except OSError as e:
             restart("ERROR: Problem in sensor reading loop")
 
-
-watchdog = machine.WDT()  # enable it with a timeout of 2s
+watchdog = Watchdog(config.WATCHDOG_ENABLED)
 
 logging.basicConfig(
     level=logging.DEBUG,
