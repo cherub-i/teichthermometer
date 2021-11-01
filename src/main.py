@@ -119,7 +119,6 @@ watchdog = Watchdog(config.WATCHDOG_ENABLED)
 
 logging.basicConfig(
     level=logging.DEBUG,
-    filename="tt.log",
     stream=sys.stdout,
     format="%(asctime)s %(levelname)s %(message)s",
 )

@@ -8,7 +8,7 @@ MQTT_TOPIC_BASE = b"wohnung/sensor_tmp_wp_1"
 MEASUREMENT_INTERVAL = 10 * 60
 # seconds between measurements (device will deep-sleep during this time)
 
-WATCHDOG_ENABLED = False
+WATCHDOG_ENABLED = True
 
 def all():
     attributes_as_dict = dict()
