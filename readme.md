@@ -27,9 +27,11 @@ but to everyone who shares with the community ♥🙏.
   - Power usage and deep sleep:
     https://www.youtube.com/watch?v=6SdyImetbp8&t=7s
     - HT7333 Specs: https://www.angeladvance.com/HT73xx.pdf
-  - finding the right pins for deep sleep on WEMOS D1 Mini (it's RST
-    with D0):
-    https://www.mischianti.org/2019/11/21/wemos-d1-mini-esp8266-the-three-type-of-sleep-mode-to-manage-energy-savings-part-4/
+    - finding the right pins for deep sleep on WEMOS D1 Mini (it's RST
+      with D0):
+      https://www.mischianti.org/2019/11/21/wemos-d1-mini-esp8266-the-three-type-of-sleep-mode-to-manage-energy-savings-part-4/
+    - WEMOS D1 infos on lowering power consumption ny Andreas Spiess:
+      https://youtu.be/rfPwOtoGO4E?t=213
   - EEPROM lifetime: https://youtu.be/r-hEOL007nw?t=50
 - ~~https://github.com/rdehuyss/micropython-ota-updater~~ as of writing
   this, there is a problem with MicroPyhton on ESP8266 with SSL

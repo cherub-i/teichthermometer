@@ -95,25 +95,29 @@ def start():
     log.info("Sensors initialized")
     watchdog.feed()
 
-    while True:
-        try:
-            results = read_dssensor(ds_sensor)
-            log.debug("Temperature(s): %s" % results)
+    try:
+        results = read_dssensor(ds_sensor)
+        log.debug("Temperature(s): %s" % results)
+        watchdog.feed()
+        for sensor, measurement in results.items():
+            log.info(
+                "Sending temperature for %s: %.2f" % (sensor, measurement)
+            )
+            mqtt_client.publish(
+                config.MQTT_TOPIC_BASE + b"/" + sensor + b"/temperatur",
+                b"{0:3.1f}".format(measurement),
+            )
             watchdog.feed()
-            for sensor, measurement in results.items():
-                log.info(
-                    "Sending temperature for %s: %.2f" % (sensor, measurement)
-                )
-                mqtt_client.publish(
-                    config.MQTT_TOPIC_BASE + b"/" + sensor + b"/temperatur",
-                    b"{0:3.1f}".format(measurement),
-                )
-                watchdog.feed()
+            time.sleep(0.5)
+            watchdog.feed()
+
+        if config.DEEP_SLEEP_CYCLE:
             log.debug("going to deep sleep")
             rtc.alarm(rtc.ALARM0, config.MEASUREMENT_INTERVAL * 1000)
             machine.deepsleep()
-        except OSError as e:
-            restart("ERROR: Problem in sensor reading loop")
+
+    except OSError as e:
+        restart("ERROR: Problem in sensor reading loop")
 
 watchdog = Watchdog(config.WATCHDOG_ENABLED)
 
